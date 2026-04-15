@@ -2,16 +2,10 @@
 publicKey=02e3af28965693b9ce1228f9d468149b831d6a0540b25e8a9900f71372c11fb277
 
 
-result=$(python3 -c "
-import hashlib, struct
- 
-pubkey = bytes.fromhex('$pubkey')
-sha = hashlib.sha256(pubkey).digest()
-r = hashlib.new('ripemd160')
-r.update(sha)
-pubkeyhash = r.hexdigest()
- 
-csv_le = struct.pack('<H', 150).hex()
-print(f'02{csv_le}b27576a914{pubkeyhash}88ac')
-")
-echo "$result"
+publicKey=02e3af28965693b9ce1228f9d468149b831d6a0540b25e8a9900f71372c11fb277
+
+lehex=$(submission/integer2lehex.sh 150 | grep "Hexcode" | awk '{print $2}')
+
+pubKeyHash=$(echo -n $publicKey | xxd -r -p | openssl dgst -sha256 -binary | openssl dgst -rmd160 | awk '{print $2}')
+
+echo "${lehex}b27576a914${pubKeyHash}88ac"
