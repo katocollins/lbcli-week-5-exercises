@@ -5,4 +5,5 @@ redeemScript=$(bitcoin-cli -regtest decoderawtransaction "$transaction" \
   | jq -r '.vin[0].scriptSig.asm' \
   | awk '{print $NF}')
  
-bitcoin-cli -regtest decodescript "$redeemScript" | jq -r '.segwit.p2sh_segwit' 
+bitcoin-cli -regtest decodescript "$redeemScript" \
+  | jq -r '.p2sh'
